@@ -287,9 +287,6 @@ function elapsed() { return (Date.now() - phaseStart) / 1000; }
 function toApnea() {
   clearTicker();
   bing(660, 1.0, 0.7);
-  // pause guided audio — user is holding breath
-  const audio = document.getElementById("wim-audio");
-  if (audio) audio.pause();
   phase = "apnea";
   phaseStart = Date.now();
   show("apnea");
@@ -328,7 +325,7 @@ function toNextCycle() {
     renderResults();
     enableNoSleep(); // keep screen on results
     const audio = document.getElementById("wim-audio");
-    if (audio) { audio.pause(); audio.currentTime = 0; }
+    if (audio) { audio.pause(); audio.currentTime = 0; } // stop only at end
   } else {
     cycle++;
     startBreathing();
@@ -341,9 +338,9 @@ function startBreathing() {
   phaseStart = Date.now();
   show("breathing");
   renderCycleBar();
-  // resume audio from where it is
+  // restart audio from beginning for each cycle
   const audio = document.getElementById("wim-audio");
-  if (audio && audio.paused) audio.play().catch(()=>{});
+  if (audio) { audio.currentTime = 0; audio.play().catch(()=>{}); }
   ticker = setInterval(() => {
     const e = elapsed();
     const left = Math.max(0, BREATH - Math.floor(e));
