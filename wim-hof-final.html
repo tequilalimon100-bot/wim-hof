@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>Wim Hof</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{
+    min-height:100vh;min-height:100dvh;
+    background:linear-gradient(160deg,#0a1628 0%,#0d2137 60%,#091420 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+    padding:24px 16px;color:#e8f4fd;
+  }
+  .card{
+    width:100%;max-width:380px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:28px;padding:32px 28px 40px;
+  }
+  .header{text-align:center;margin-bottom:24px}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#4fc3f7;display:block;margin-bottom:6px}
+  .title{font-size:28px;font-weight:700;letter-spacing:-.02em}
+  .badge{display:inline-block;margin-top:8px;padding:3px 12px;border-radius:20px;font-size:11px}
+  .badge.on{background:rgba(79,195,247,0.12);color:#4fc3f7}
+  .badge.warn{background:rgba(255,180,50,0.12);color:#ffb74d}
+
+  /* cycle bar */
+  .cycle-bar{display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:4px}
+  .cycle-dot{width:10px;height:10px;border-radius:50%;transition:all .3s}
+  .cycle-text{font-size:12px;color:#5a8099;margin-left:6px}
+
+  .phase-tag{font-size:14px;color:#7bafc8;letter-spacing:.05em;text-align:center;margin-bottom:4px}
+  .hint{font-size:12px;color:#5a8099;text-align:center;line-height:1.6}
+
+  /* ring */
+  .ring-wrap{position:relative;margin:0 auto}
+  .ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .timer-text{font-size:36px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+  .timer-sub{font-size:12px;color:#5a8099;letter-spacing:.08em;margin-top:2px}
+
+  /* audio player */
+  .audio-wrap{width:100%;margin:8px 0}
+  .audio-wrap audio{width:100%;border-radius:12px;outline:none}
+
+  /* apnea */
+  .apnea-screen{display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0}
+  .apnea-label{font-size:16px;color:#7bafc8;letter-spacing:.05em}
+  .apnea-big{font-size:72px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.04em;line-height:1;animation:apneaPulse 2s ease-in-out infinite}
+  .apnea-sub{font-size:13px;color:#5a8099;letter-spacing:.1em;margin-top:-8px}
+
+  /* buttons */
+  .btn-primary{
+    display:block;width:100%;margin-top:16px;padding:15px;border-radius:50px;border:none;
+    background:linear-gradient(135deg,#4fc3f7,#0288d1);
+    color:#fff;font-size:17px;font-weight:600;cursor:pointer;
+    box-shadow:0 4px 24px rgba(79,195,247,0.3);
+  }
+  .btn-stop{
+    margin-top:12px;padding:20px 64px;border-radius:50px;
+    border:2px solid rgba(255,100,100,0.5);
+    background:rgba(255,80,80,0.15);
+    color:#ff8a80;font-size:22px;font-weight:800;cursor:pointer;
+  }
+
+  /* flow diagram */
+  .flow{background:rgba(255,255,255,0.03);border-radius:16px;padding:16px 24px;margin:8px 0;width:100%}
+  .flow-row{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .flow-label{font-size:13px;color:#7bafc8}
+  .flow-sub{font-size:11px;color:#3a6070}
+  .flow-arrow{font-size:14px;color:#2a4a5a;margin-left:28px;display:block}
+  .flow-repeat{font-size:12px;color:#4fc3f7;text-align:center;margin-top:8px;letter-spacing:.05em}
+
+  /* results */
+  .results-box{width:100%;background:rgba(255,255,255,0.04);border-radius:16px;padding:16px 20px}
+  .result-row{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+  .result-label{font-size:14px;color:#5a8099}
+  .result-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
+  .tag{font-size:10px;padding:2px 6px;border-radius:8px;margin-right:6px}
+  .tag-best{background:rgba(79,195,247,0.12);color:#4fc3f7}
+  .tag-worst{background:rgba(79,195,247,0.06);color:#7bafc8}
+  .divider{height:1px;background:rgba(255,255,255,0.06);margin:10px 0}
+  .avg-label{font-size:14px;color:#cdd6e0;font-weight:600}
+  .avg-value{font-size:18px;font-weight:600;color:#81c784;font-variant-numeric:tabular-nums}
+
+  .done-icon{
+    width:72px;height:72px;border-radius:50%;
+    background:rgba(79,195,247,0.15);border:2px solid #4fc3f7;
+    display:flex;align-items:center;justify-content:center;
+    font-size:32px;color:#4fc3f7;margin:0 auto 12px;
+  }
+  .done-title{font-size:22px;font-weight:700;text-align:center;margin-bottom:16px}
+
+  .center{display:flex;flex-direction:column;align-items:center;gap:16px}
+
+  .hidden{display:none}
+
+  @keyframes apneaPulse{0%,100%{opacity:.85}50%{opacity:1}}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.7);opacity:1}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <span class="eyebrow">Método Wim Hof</span>
+    <h1 class="title">Respiración</h1>
+    <div id="badge" class="badge hidden"></div>
+  </div>
+
+  <!-- IDLE -->
+  <div id="screen-idle" class="center">
+    <div style="width:100px;height:100px;border-radius:50%;background:rgba(79,195,247,0.08);border:2px solid rgba(79,195,247,0.2);display:flex;align-items:center;justify-content:center;font-size:44px">🌬️</div>
+    <div class="flow">
+      <div class="flow-row"><span style="font-size:18px">🌬️</span><div><span class="flow-label">2 min respiración</span><span class="flow-sub"> · guía de audio</span></div></div>
+      <span class="flow-arrow">↓</span>
+      <div class="flow-row"><span style="font-size:18px">🤫</span><div><span class="flow-label">Apnea libre</span><span class="flow-sub"> · cronómetro grande</span></div></div>
+      <span class="flow-arrow">↓</span>
+      <div class="flow-row"><span style="font-size:18px">💨</span><div><span class="flow-label">15 seg recuperación</span><span class="flow-sub"> · doble bing</span></div></div>
+      <div class="flow-repeat">× 4 ciclos</div>
+    </div>
+    <button class="btn-primary" onclick="startSession()">Comenzar</button>
+  </div>
+
+  <!-- BREATHING -->
+  <div id="screen-breathing" class="center hidden">
+    <div id="cycle-bar-b" class="cycle-bar"></div>
+    <div class="phase-tag">🌬️ Respiración</div>
+    <div class="ring-wrap" style="width:180px;height:180px">
+      <svg viewBox="0 0 120 120" style="width:100%;height:100%">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#1a2a3a" stroke-width="8"/>
+        <circle id="ring-breath" cx="60" cy="60" r="54" fill="none" stroke="#4fc3f7" stroke-width="8"
+          stroke-linecap="round"
+          stroke-dasharray="339.3"
+          stroke-dashoffset="339.3"
+          transform="rotate(-90 60 60)"
+          style="transition:stroke-dashoffset 0.3s linear"/>
+      </svg>
+      <div class="ring-inner">
+        <span id="breath-time" class="timer-text">02:00</span>
+        <span class="timer-sub">restante</span>
+      </div>
+    </div>
+    <!-- Audio guiado -->
+    <div class="audio-wrap">
+      <audio id="wim-audio" controls preload="auto">
+        <source src="https://raw.githubusercontent.com/tequilalimon100-bot/wim-hof/main/Guided%20Wim%20Hof%20Breathwork%20_%204%20Rounds.mp3" type="audio/mpeg"/>
+      </audio>
+    </div>
+    <p class="hint">Dale play al audio · la pantalla no se apagará</p>
+  </div>
+
+  <!-- APNEA -->
+  <div id="screen-apnea" class="apnea-screen hidden">
+    <div id="cycle-bar-a" class="cycle-bar"></div>
+    <div class="apnea-label">🤫 Apnea</div>
+    <div id="apnea-time" class="apnea-big">00:00.00</div>
+    <div class="apnea-sub">reteniendo</div>
+    <button class="btn-stop" onclick="stopApnea()">SOLTAR</button>
+  </div>
+
+  <!-- RECOVERY -->
+  <div id="screen-recovery" class="center hidden">
+    <div id="cycle-bar-r" class="cycle-bar"></div>
+    <div class="phase-tag">💨 Recuperación</div>
+    <div class="ring-wrap" style="width:180px;height:180px">
+      <svg viewBox="0 0 120 120" style="width:100%;height:100%">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#1a2a3a" stroke-width="8"/>
+        <circle id="ring-recovery" cx="60" cy="60" r="54" fill="none" stroke="#81c784" stroke-width="8"
+          stroke-linecap="round"
+          stroke-dasharray="339.3"
+          stroke-dashoffset="339.3"
+          transform="rotate(-90 60 60)"
+          style="transition:stroke-dashoffset 0.3s linear"/>
+      </svg>
+      <div class="ring-inner">
+        <span id="recovery-time" class="timer-text">00:15</span>
+        <span class="timer-sub">seg</span>
+      </div>
+    </div>
+    <p class="hint">Respira profundo y mantén</p>
+  </div>
+
+  <!-- DONE -->
+  <div id="screen-done" class="hidden">
+    <div class="done-icon">✓</div>
+    <div class="done-title">Sesión completa</div>
+    <div id="results-box" class="results-box"></div>
+    <button class="btn-primary" onclick="startSession()">Nueva sesión</button>
+  </div>
+</div>
+
+<script>
+const BREATH = 120, RECOVERY = 15, CYCLES = 4;
+const CIRC = 2 * Math.PI * 54; // 339.3
+
+let phase = "idle";
+let cycle = 1;
+let results = [];
+let phaseStart = null;
+let ticker = null;
+let noSleepVideo = null;
+let audioCtx = null;
+
+// ── NoSleep ──────────────────────────────────────────────────
+function enableNoSleep() {
+  if (!noSleepVideo) {
+    noSleepVideo = document.createElement("video");
+    noSleepVideo.setAttribute("playsinline","");
+    noSleepVideo.setAttribute("muted","");
+    noSleepVideo.loop = true;
+    noSleepVideo.src = "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28ybXA0MWAAAA9mcmVlAAADbm1kYXQ=";
+    noSleepVideo.style.cssText = "position:fixed;width:1px;height:1px;opacity:0.01;pointer-events:none;top:0;left:0";
+    document.body.appendChild(noSleepVideo);
+  }
+  noSleepVideo.play().catch(()=>{});
+}
+
+// ── Audio bings ──────────────────────────────────────────────
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+function bing(freq, dur=0.6, vol=0.6) {
+  if (!audioCtx) return;
+  const resume = () => {
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.connect(g); g.connect(audioCtx.destination);
+    o.type = "sine";
+    o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    g.gain.setValueAtTime(vol, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.start(); o.stop(audioCtx.currentTime + dur);
+  };
+  audioCtx.state === "suspended" ? audioCtx.resume().then(resume) : resume();
+}
+
+// ── Screens ──────────────────────────────────────────────────
+function show(id) {
+  ["idle","breathing","apnea","recovery","done"].forEach(s => {
+    document.getElementById("screen-"+s).classList.toggle("hidden", s !== id);
+  });
+}
+
+function setBadge(text, type) {
+  const b = document.getElementById("badge");
+  if (!text) { b.classList.add("hidden"); return; }
+  b.textContent = text;
+  b.className = "badge " + type;
+}
+
+// ── Cycle bar ────────────────────────────────────────────────
+function renderCycleBar(id) {
+  ["b","a","r"].forEach(suffix => {
+    const el = document.getElementById("cycle-bar-"+suffix);
+    el.innerHTML = Array.from({length:CYCLES},(_,i) => {
+      const active = i < cycle;
+      const current = i === cycle-1;
+      return `<div class="cycle-dot" style="background:${active?"#4fc3f7":"rgba(79,195,247,0.15)"};border:${current?"2px solid #4fc3f7":"2px solid transparent"}"></div>`;
+    }).join("") + `<span class="cycle-text">Ciclo ${cycle}/${CYCLES}</span>`;
+  });
+}
+
+// ── Formatters ───────────────────────────────────────────────
+function fmt(s) {
+  return String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
+}
+function fmtMs(ms) {
+  const t = Math.floor(ms/1000);
+  return String(Math.floor(t/60)).padStart(2,"0") + ":" +
+         String(t%60).padStart(2,"0") + "." +
+         String(Math.floor((ms%1000)/10)).padStart(2,"0");
+}
+
+function setRing(id, progress) {
+  const el = document.getElementById(id);
+  el.style.strokeDashoffset = CIRC * (1 - progress/100);
+}
+
+// ── Timer ────────────────────────────────────────────────────
+function clearTicker() { clearInterval(ticker); }
+
+function elapsed() { return (Date.now() - phaseStart) / 1000; }
+
+// ── Transitions ──────────────────────────────────────────────
+function toApnea() {
+  clearTicker();
+  bing(660, 1.0, 0.7);
+  // pause guided audio — user is holding breath
+  const audio = document.getElementById("wim-audio");
+  if (audio) audio.pause();
+  phase = "apnea";
+  phaseStart = Date.now();
+  show("apnea");
+  renderCycleBar();
+  ticker = setInterval(() => {
+    document.getElementById("apnea-time").textContent = fmtMs(Date.now() - phaseStart);
+  }, 50);
+}
+
+function stopApnea() {
+  clearTicker();
+  const ms = Date.now() - phaseStart;
+  results.push(ms);
+  bing(880, 0.6, 0.5);
+  phase = "recovery";
+  phaseStart = Date.now();
+  show("recovery");
+  renderCycleBar();
+  ticker = setInterval(() => {
+    const e = elapsed();
+    const left = Math.max(0, RECOVERY - Math.floor(e));
+    document.getElementById("recovery-time").textContent = fmt(left);
+    setRing("ring-recovery", (e / RECOVERY) * 100);
+    if (e >= RECOVERY) toNextCycle();
+  }, 200);
+}
+
+function toNextCycle() {
+  clearTicker();
+  bing(1000, 0.4, 0.6);
+  setTimeout(() => bing(1300, 0.4, 0.5), 280);
+  if (cycle >= CYCLES) {
+    phase = "done";
+    show("done");
+    setBadge("","");
+    renderResults();
+    enableNoSleep(); // keep screen on results
+    const audio = document.getElementById("wim-audio");
+    if (audio) { audio.pause(); audio.currentTime = 0; }
+  } else {
+    cycle++;
+    startBreathing();
+  }
+}
+
+function startBreathing() {
+  clearTicker();
+  phase = "breathing";
+  phaseStart = Date.now();
+  show("breathing");
+  renderCycleBar();
+  // resume audio from where it is
+  const audio = document.getElementById("wim-audio");
+  if (audio && audio.paused) audio.play().catch(()=>{});
+  ticker = setInterval(() => {
+    const e = elapsed();
+    const left = Math.max(0, BREATH - Math.floor(e));
+    document.getElementById("breath-time").textContent = fmt(left);
+    setRing("ring-breath", (e / BREATH) * 100);
+    if (e >= BREATH) toApnea();
+  }, 200);
+}
+
+// ── Results ──────────────────────────────────────────────────
+function renderResults() {
+  const box = document.getElementById("results-box");
+  const best = Math.max(...results), worst = Math.min(...results);
+  const avg = results.reduce((a,b)=>a+b,0)/results.length;
+  box.innerHTML = results.map((ms,i) => `
+    <div class="result-row">
+      <span class="result-label">Ciclo ${i+1}</span>
+      <div>
+        ${ms===best?'<span class="tag tag-best">↑ mejor</span>':""}
+        ${ms===worst&&results.length>1?'<span class="tag tag-worst">↓ menor</span>':""}
+        <span class="result-value" style="color:${ms===best?"#4fc3f7":ms===worst?"#7bafc8":"#cdd6e0"}">${fmtMs(ms)}</span>
+      </div>
+    </div>
+  `).join("") + `
+    <div class="divider"></div>
+    <div class="result-row">
+      <span class="avg-label">Promedio</span>
+      <span class="avg-value">${fmtMs(avg)}</span>
+    </div>
+  `;
+}
+
+// ── Start ────────────────────────────────────────────────────
+function startSession() {
+  initAudio();
+  enableNoSleep();
+  clearTicker();
+  cycle = 1; results = [];
+  // reset audio
+  const audio = document.getElementById("wim-audio");
+  if (audio) { audio.pause(); audio.currentTime = 0; }
+  setBadge("● Pantalla activa","on");
+  startBreathing();
+}
+</script>
+</body>
+</html>
