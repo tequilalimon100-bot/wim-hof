@@ -176,7 +176,7 @@
           style="transition:stroke-dashoffset 0.3s linear"/>
       </svg>
       <div class="ring-inner">
-        <span id="recovery-time" class="timer-text">00:15</span>
+        <span id="recovery-time" class="timer-text">00:28</span>
         <span class="timer-sub">seg</span>
       </div>
     </div>
@@ -193,7 +193,7 @@
 </div>
 
 <script>
-const BREATH = 137, RECOVERY = 15, CYCLES = 4;
+const BREATH = 137, RECOVERY = 28, CYCLES = 4;
 const CIRC = 2 * Math.PI * 54; // 339.3
 
 let phase = "idle";
@@ -313,11 +313,23 @@ function toApnea() {
 function stopApnea() {
   clearTicker();
   clearInterval(window._apneaLoopInterval);
-  const audio = document.getElementById("wim-audio");
-  if (audio) audio.pause();
   const ms = Date.now() - phaseStart;
   results.push(ms);
   bing(880, 0.6, 0.5);
+  // Start recovery audio loop 3:06 to 3:32
+  const RECOV_LOOP_START = 186; // 3:06
+  const RECOV_LOOP_END = 212;   // 3:32
+  const recAudio = document.getElementById("wim-audio");
+  if (recAudio) {
+    recAudio.currentTime = RECOV_LOOP_START;
+    recAudio.play().catch(()=>{});
+  }
+  window._recovLoopInterval = setInterval(() => {
+    const a = document.getElementById("wim-audio");
+    if (a && a.currentTime >= RECOV_LOOP_END) {
+      a.currentTime = RECOV_LOOP_START;
+    }
+  }, 200);
   phase = "recovery";
   phaseStart = Date.now();
   show("recovery");
@@ -357,6 +369,7 @@ function startBreathing() {
   renderCycleBar();
   // restart audio from beginning for each cycle
   clearInterval(window._apneaLoopInterval);
+  clearInterval(window._recovLoopInterval);
   const audio = document.getElementById("wim-audio");
   if (audio) { audio.currentTime = 0; audio.play().catch(()=>{}); }
   ticker = setInterval(() => {
