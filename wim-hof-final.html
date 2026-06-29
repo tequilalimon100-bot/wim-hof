@@ -193,7 +193,7 @@
 </div>
 
 <script>
-const BREATH = 137, RECOVERY = 30, CYCLES = 4;
+const BREATH = 137, RECOVERY = 28, CYCLES = 4;
 const CIRC = 2 * Math.PI * 54; // 339.3
 
 let phase = "idle";
@@ -317,7 +317,7 @@ function stopApnea() {
   results.push(ms);
   bing(880, 0.6, 0.5);
   // Start recovery audio loop 3:06 to 3:32
-  const RECOV_LOOP_START = 186; // 3:06
+  const RECOV_LOOP_START = 185; // 3:05
   const RECOV_LOOP_END = 213;   // 3:33
   const recAudio = document.getElementById("wim-audio");
   if (recAudio) {
